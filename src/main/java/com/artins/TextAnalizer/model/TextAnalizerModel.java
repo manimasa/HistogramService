@@ -1,12 +1,12 @@
-package com.artins.ServiceName.model;
+package com.artins.TextAnalizer.model;
 
 
 
-public class ServiceNameModel {
+public class TextAnalizerModel {
 	private int score;
 	private String playerName;
 	
-	public ServiceNameModel(String playerName, int score){
+	public TextAnalizerModel(String playerName, int score){
 		this.score = score;
 		this.playerName = playerName;
 	}

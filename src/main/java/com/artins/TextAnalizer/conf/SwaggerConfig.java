@@ -1,4 +1,4 @@
-package com.artins.ServiceName.conf;
+package com.artins.TextAnalizer.conf;
 
 import java.time.LocalDate;
 

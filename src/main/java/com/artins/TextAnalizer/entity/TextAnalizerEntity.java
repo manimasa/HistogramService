@@ -1,5 +1,5 @@
 // tag::sample[]
-package com.artins.ServiceName.entity;
+package com.artins.TextAnalizer.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.OrderBy;
 
 @Entity
-public class ServiceNameEntity {
+public class TextAnalizerEntity {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -17,9 +17,9 @@ public class ServiceNameEntity {
     private int score;
     private String playerName;
 
-    protected ServiceNameEntity() {}
+    protected TextAnalizerEntity() {}
 
-    public ServiceNameEntity(int score, String playerName) {
+    public TextAnalizerEntity(int score, String playerName) {
         this.score = score;
         this.playerName = playerName;
     }

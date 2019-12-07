@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.artins.ServiceName.test;
+package com.artins.TextAnalizer.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,25 +27,25 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.artins.ServiceName.entity.ServiceNameEntity;
-import com.artins.ServiceName.repository.ServiceNameRepository;
+import com.artins.TextAnalizer.entity.TextAnalizerEntity;
+import com.artins.TextAnalizer.repository.TextAnalizerRepository;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class ServiceNameReopositoryTests {
+public class TextAnalizerReopositoryTests {
     @Autowired
     private TestEntityManager entityManager;
 
     @Autowired
-    private ServiceNameRepository scorecardRepo;
+    private TextAnalizerRepository scorecardRepo;
 
     @Test
     public void testFindByPlayerName() {
-        ServiceNameEntity scoreCard = new ServiceNameEntity(15, "Martins");
+        TextAnalizerEntity scoreCard = new TextAnalizerEntity(15, "Martins");
         entityManager.persist(scoreCard);
 
-        List<ServiceNameEntity> findByPlayerName = scorecardRepo.findByPlayerNameOrderByScoreDesc(scoreCard.getPlayerName());
+        List<TextAnalizerEntity> findByPlayerName = scorecardRepo.findByPlayerNameOrderByScoreDesc(scoreCard.getPlayerName());
 
-        assertThat(findByPlayerName).extracting(ServiceNameEntity::getPlayerName).containsOnly(scoreCard.getPlayerName());
+        assertThat(findByPlayerName).extracting(TextAnalizerEntity::getPlayerName).containsOnly(scoreCard.getPlayerName());
     }
 }

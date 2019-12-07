@@ -1,4 +1,4 @@
-package com.artins.ServiceName.conf;
+package com.artins.TextAnalizer.conf;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

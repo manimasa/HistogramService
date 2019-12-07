@@ -1,4 +1,4 @@
-package com.artins.ServiceName.conf;
+package com.artins.TextAnalizer.conf;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

@@ -6,4 +6,3 @@ Note that the api in the YAML is for the swagger
 Note to access the client from eureka server i.e api gateway use this url http://localhost:8080/resource/swagger-ui.html#/ (This is because swagger is enabled on the client)
 The client is on http://localhost:8089/swagger-ui.html#/
 The eureka client is set to false by default in the application yaml file to enable it set the enabled property to true - same configuration can be applied to swagger.
-Change all occurrences of ServiceName to the new Service that you want to create
