@@ -20,18 +20,13 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping("v1/scorecard/scores/")
+@RequestMapping("v1/texts-scores/")
 @Api(tags = "TextAnalizer API")
 public interface TextAnalizerResourceApi {
 	
-	@GetMapping(value = "{playerName}")
-	@ApiOperation(value = "Returns the player's core card")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "ok")})
-	public List<TextAnalizerResponse> getScores(@Valid @PathVariable String playerName);
-	
-	@ApiOperation(value = "Save a player's score card")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "ok")})
-	@PostMapping(value = "save", consumes = "application/json", produces = "application/json")
-	public TextAnalizerResponse save(@Valid @RequestBody TextAnalizerRequest request);
-
+	@ApiOperation(value = "Return scores for texts on url")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "ok"), 
+							@ApiResponse(code = 204, message = "No content")})
+	@PostMapping(consumes = "application/json", produces = "application/json")
+	public List<TextAnalizerResponse> scoreUrlTexts(@Valid @RequestBody TextAnalizerRequest req);
 }
