@@ -41,7 +41,7 @@ api:
       
 swagger:
   enabled: true
-  title: Service API
+  title: TextAnalizerService API
   description: Sample Swagger implementation for the `TextAnalizerService` service, leveraging annotations at the controller-method level.
   useDefaultResponseMessages: false
   enableUrlTemplating: false

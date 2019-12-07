@@ -1,10 +1,10 @@
-package com.artins.TextAnalizer.rest;
+package com.artins.TextAnalizer.api;
 
-public class TextAnalizerResponse {
+public class TextAnalizerRequest {
 	private int point;
 	private String playerName;
 	
-	public TextAnalizerResponse(String playerName, int point){
+	public TextAnalizerRequest(String playerName, int point){
 		this.point = point;
 		this.playerName = playerName;
 	}
@@ -24,5 +24,4 @@ public class TextAnalizerResponse {
 	public int getPoint() {
 		return point;
 	}
-
 }
