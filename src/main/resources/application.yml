@@ -1,0 +1,81 @@
+
+---
+server:
+  port: 8089
+
+---
+spring:
+  application:
+    name: ServiceName
+  profiles: local, default
+     
+datasource:
+  sampleapp:
+    url: jdbc:h2:~/test
+    username: SA
+    password:
+    driverClassName: org.h2.Driver
+    defaultSchema:
+    maxPoolSize: 10
+    users-query:
+    roles-query: 
+    hibernate:
+      hbm2ddl.method: create-drop
+      show_sql: true
+      format_sql: true
+      dialect: org.hibernate.dialect.H2Dialect
+ 
+eureka:
+    client:
+        enabled: false
+        register-with-eureka: true
+        fetch-registry: true
+        serviceUrl: 
+           defaultZone: http://localhost:8080/eureka/
+    instance:
+        host: localhost
+ 
+api: 
+  version: 1.0
+
+      
+swagger:
+  enabled: true
+  title: Service API
+  description: Sample Swagger implementation for the `ServiceName` service, leveraging annotations at the controller-method level.
+  useDefaultResponseMessages: false
+  enableUrlTemplating: false
+  deepLinking: true
+  defaultModelsExpandDepth: 1
+  defaultModelExpandDepth: 1
+  displayOperationId: false
+  displayRequestDuration: false
+  filter: false
+  maxDisplayedTags: 0
+  showExtensions: false;
+  
+  
+---
+spring:
+  application:
+    name: Service
+  profiles: prod
+  
+
+datasource:
+  sampleapp:
+    url: jdbc:mysql://localhost:3306/service
+    username: root
+    password: rootTester
+    driverClassName: com.mysql.jdbc.Driver
+    defaultSchema:
+    maxPoolSize: 
+    users-query: 
+    roles-query: 
+    hibernate:
+      hbm2ddl.method: update
+      show_sql: true
+      format_sql: true
+      dialect: org.hibernate.dialect.MySQLDialect
+
+
