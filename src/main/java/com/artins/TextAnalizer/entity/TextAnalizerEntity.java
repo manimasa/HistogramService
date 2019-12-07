@@ -27,7 +27,7 @@ public class TextAnalizerEntity {
     @Override
     public String toString() {
         return String.format(
-                "ScoreCard[id=%d, Score='%d', playerName='%s']",
+                "ScoreCard[id=%d, WordScore='%d', playerName='%s']",
                 id, score, playerName);
     }
 

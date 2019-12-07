@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.artins.TextAnalizer.model.TextAnalizerModel;
+import com.artins.TextAnalizer.api.TextAnalizerResponse;
+
 
 @Service
 public interface TextAnalizer {
-	List<TextAnalizerModel> getScoreCard(String player);
-	TextAnalizerModel saveScoreCard(TextAnalizerModel scoreCard);
+	List<TextAnalizerResponse>  getScore(String url);
 }

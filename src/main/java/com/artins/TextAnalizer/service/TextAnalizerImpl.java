@@ -1,52 +1,59 @@
 package com.artins.TextAnalizer.service;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.artins.TextAnalizer.entity.TextAnalizerEntity;
-import com.artins.TextAnalizer.model.TextAnalizerModel;
-import com.artins.TextAnalizer.repository.TextAnalizerRepository;
+import com.artins.TextAnalizer.api.TextAnalizerResponse;
+import com.artins.TextAnalizer.model.WordHistogram;
 
 @Service
 public class TextAnalizerImpl implements TextAnalizer {
 	private static final Logger log = LoggerFactory.getLogger(TextAnalizer.class);
-
+	
 	@Autowired
-	TextAnalizerRepository scoreCardrepo;
-
+	private WordFreqencyHistogramService service;
+	
 	@Override
-	public List<TextAnalizerModel> getScoreCard(String playerName) {
-		log.info("Getting scorecards for player with player name {}", playerName);
-		return map(scoreCardrepo.findByPlayerNameOrderByScoreDesc(playerName));
+	public List<TextAnalizerResponse> getScore(String url) {
+		final String html;
+		try {
+			html = Jsoup.connect(url).get().html();
+			Document doc = Jsoup.parse(html);
+			String data =(doc.body().text());
+			List<String> words = Arrays.asList(data.split(" "));
+			log.info("Size of word is {}", words.size());
+			return buildResponseObj(service.getHistogram(words));
+		} catch (MalformedURLException e) {
+			//TODO: How to respond to the controller
+				e.printStackTrace();
+		} catch (IOException e) {
+			//TODO: How to respond to the controller
+			e.printStackTrace();
+		}
+		//TODO: Return score
+		return null;
 	}
-
-	@Override
-	public TextAnalizerModel saveScoreCard(TextAnalizerModel scoreCard) {	
-		log.info("Saving scorecard for player with player name {}", scoreCard.getPlayerName());
-		return map(scoreCardrepo.save(map(scoreCard)));
-	}
-
-	private List<TextAnalizerModel> map(List<TextAnalizerEntity> scoreCardEntities) {
-		List<TextAnalizerModel> scoreCardList = new ArrayList<>();
+	
+	private List<TextAnalizerResponse> buildResponseObj(WordHistogram wh){
 		
-		for (TextAnalizerEntity scoreCard : scoreCardEntities) {
-			scoreCardList.add(new TextAnalizerModel(scoreCard.getPlayerName(), scoreCard.getScore()));
+		final List<TextAnalizerResponse> list = new ArrayList<>();
+		log.info("WordHistogram size of word is {}", wh.getHistogram().size());
+
+		for(int i = 0; i < wh.getHistogram().size(); i++) {
+			list.add(TextAnalizerResponse.builder().frequency(wh.getHistogram().get(i).getFrequency()).word(wh.getHistogram().get(i).getWord()).build());
 		}
 		
-		return scoreCardList;
-	}
-	
-	private TextAnalizerEntity map(TextAnalizerModel scoreCard) {
-		return new TextAnalizerEntity(scoreCard.getScore(), scoreCard.getPlayerName());
-	}
-	
-	private TextAnalizerModel map(TextAnalizerEntity scorecardEntity) {
-		return new TextAnalizerModel(scorecardEntity.getPlayerName(), scorecardEntity.getScore());
+		return list;
 	}
 
 }
