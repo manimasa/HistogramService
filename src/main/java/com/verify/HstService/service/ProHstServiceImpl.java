@@ -14,7 +14,7 @@ import lombok.Data;
 
 @Service
 public class ProHstServiceImpl implements ProHstService {
-	private final int LOAD_PER_WORKER_THREAD = 800;
+	private final int LOAD_PER_WORKER_THREAD = 750;
 	private List<String> workerThreadsResource = new ArrayList<>();
 	private Hist hst = new Hist();
 	private final int MAX_WORD_LENGTH = 3;
@@ -114,8 +114,8 @@ public class ProHstServiceImpl implements ProHstService {
 				}
 			}
 			
-			long taskTime = (startTime - System.currentTimeMillis());
-			log.info("WorkerThread {} completed in {}ms ", id, taskTime);
+			long taskTime = (System.currentTimeMillis() - startTime);
+			log.info("WorkerThread {} completed in {} ms ", id, taskTime);
 			hst.append(hstData);
 		}
 	}

@@ -34,7 +34,7 @@ public class HstServiceImpl implements HstService {
 			String data =(doc.body().text());
 			List<String> urlData = Arrays.asList(data.split(" "));
 			
-			log.info("Got {} words in total from URL {}", urlData.size(), url);
+			log.info("I got {} words in total from the URL {}", urlData.size(), url);
 			
 			return buildHistResponse(service.getTopHistogramData(MAX_HST_DATA, service.getHistogram(urlData)));
 		} catch (MalformedURLException e) {
