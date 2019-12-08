@@ -14,7 +14,7 @@ import lombok.Data;
 
 @Service
 public class ProHstServiceImpl implements ProHstService {
-	private final int LOAD_PER_WORKER_THREAD = 750;
+	private final int LOAD_PER_WORKER_THREAD = 800;
 	private List<String> workerThreadsResource = new ArrayList<>();
 	private Hist hst = new Hist();
 	private final int MAX_WORD_LENGTH = 3;
