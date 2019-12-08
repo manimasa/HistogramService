@@ -55,7 +55,8 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 		}
 
 		// addFrequencies();
-		return wordHistogram;
+		return getDistinctWord(wordHistogram);
+		//return wordHistogram;
 	}
 
 	@Data
@@ -88,19 +89,21 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 					}
 				}
 
-				if (freq == 1) {
+				if (freq == 1 && mainWord.length() >= MAX_WORD_LENGTH) {
 					wordScores.add(WordScore.builder().word(mainWord).frequency(freq).build());
 				}
 			}
-			
-			/*if(id == 0) {
-				for(int i = 0; i  < wordScores.size(); i++) {
-					System.out.println(wordScores.get(i));
-				}
-			}*/
+
 
 
 			wordHistogram.append(wordScores);
+			
+			
+			if(id == 1) {
+				for(int i = 0; i  < wordScores.size(); i++) {
+					System.out.println(wordScores.get(i));
+				}
+			}
 		}
 	}
 
@@ -155,6 +158,34 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 
 		log.info("Size after {}", wordHistogram.getHistogram().size());
 
+	}
+	
+	private WordHistogram getDistinctWord(WordHistogram list){
+		 List<WordScore> wordScores = new ArrayList<>();
+		 WordHistogram result = new WordHistogram();
+		
+		for (int i = 0; i < list.getHistogram().size(); i++) {
+			WordScore mainWord = list.getHistogram().get(i);
+
+			boolean exist = false;
+
+			for (int j = 0; j < wordScores.size(); j++) {
+				// List contains and frequency here?
+				if (wordScores.get(j).getWord().equals(mainWord.getWord())) {
+					int theFrq = wordScores.get(j).getFrequency() + mainWord.getFrequency();
+					WordScore tmpWord = WordScore.builder().word(mainWord.getWord()).frequency(theFrq).build();
+					wordScores.set(j, tmpWord);
+					exist = true;
+				}
+			}
+
+			if (!exist) {
+				wordScores.add(mainWord);
+			}
+		}
+
+		result.setHistogram(wordScores);
+		return result;
 	}
 
 }
