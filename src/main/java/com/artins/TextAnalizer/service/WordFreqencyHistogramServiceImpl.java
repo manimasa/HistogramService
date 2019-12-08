@@ -14,7 +14,7 @@ import lombok.Data;
 
 @Service
 public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramService {
-	private final int WORDS_PER_WORKER_THREAD = 1000;
+	private final int WORDS_PER_WORKER_THREAD = 800;
 	private List<String> workerThreadsResource = new ArrayList<>();
 	private WordHistogram wordHistogram = new WordHistogram();
 	private final int MAX_WORD_LENGTH = 3;
@@ -43,14 +43,10 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 		}
 
 		try {
-
 			for (Thread t : workerThreads) {
 				t.join();
 			}
-
-		} catch (InterruptedException e) {
-
-		}
+		} catch (InterruptedException e) {}
 
 		return getDistinctWord(wordHistogram);
 
@@ -92,12 +88,7 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 			}
 
 			wordHistogram.append(wordScores);
-
-			if (id == 1) {
-				for (int i = 0; i < wordScores.size(); i++) {
-					System.out.println(wordScores.get(i));
-				}
-			}
+			
 		}
 	}
 
@@ -110,11 +101,12 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 			if (!wordScoresFinalList.contains(wordScore)) {
 				WordScore toReturn = wordScore;
 				for (int i = 0; i < currentList.size(); i++) {
-					if (toReturn.getFrequency() < currentList.get(i).getFrequency() && !currentList.contains(wordScore)) {
+					if (toReturn.getFrequency() < currentList.get(i).getFrequency()
+							&& !currentList.contains(wordScore)) {
 						toReturn = currentList.get(i);
 					}
 				}
-					wordScoresFinalList.add(toReturn);
+				wordScoresFinalList.add(toReturn);
 			}
 
 			max--;

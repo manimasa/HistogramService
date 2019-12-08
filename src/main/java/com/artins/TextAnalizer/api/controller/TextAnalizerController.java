@@ -21,10 +21,9 @@ public class TextAnalizerController implements TextAnalizerResourceApi {
 
 	@Override
 	public List<TextAnalizerResponse> scoreUrlTexts(@Valid TextAnalizerRequest req) {
-		//convert model to rest model
+
 		return service.getScore(req.getUrl());
 		
-		//TODO:handle other cases
 	}
 	
 	
