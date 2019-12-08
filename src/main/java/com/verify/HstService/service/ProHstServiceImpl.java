@@ -52,9 +52,7 @@ public class ProHstServiceImpl implements ProHstService {
 
 	public Hist getTopHistogramData(int max, Hist hst) {
 		List<HstData> dynHst = new ArrayList<>();
-		final List<HstData> finalHst = hst.getData();
-		final int total = max;
-		
+		final List<HstData> finalHst = hst.getData();		
 		Hist resultHst = new Hist();
 
 		for (HstData data : finalHst) {
@@ -74,7 +72,7 @@ public class ProHstServiceImpl implements ProHstService {
 		}
 
 		resultHst.setData(dynHst);
-		log.info("Succefully compiled histogram of {} most frequent words.", total);
+		log.info("Succefully compiled histogram.");
 		return resultHst;
 	}
 	
