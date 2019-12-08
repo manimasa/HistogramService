@@ -38,9 +38,9 @@ public class HstServiceImpl implements HstService {
 			
 			return buildHistResponse(service.getTopHistogramData(MAX_HST_DATA, service.getHistogram(urlData)));
 		} catch (MalformedURLException e) {
-			log.error("An exception occured requesting url data", e);
+			log.error("An exception occured while requesting url data", e);
 		} catch (IOException e) {
-			log.error("An exception occured requesting url data", e);
+			log.error("An exception occured while requesting url data", e);
 		}
 
 		return null;

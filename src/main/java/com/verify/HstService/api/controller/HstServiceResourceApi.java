@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping("v1/scores/")
+@RequestMapping("v1/get-histogram/")
 @Api(tags = "HistService API")
 public interface HstServiceResourceApi {
 	
@@ -27,5 +27,5 @@ public interface HstServiceResourceApi {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "ok"), 
 							@ApiResponse(code = 204, message = "No content")})
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public  ResponseEntity<List<HstServiceResponse>> scoreUrlTexts(@Valid @RequestBody HstServiceRequest req);
+	public  ResponseEntity<List<HstServiceResponse>> getHistogram(@Valid @RequestBody HstServiceRequest req);
 }
