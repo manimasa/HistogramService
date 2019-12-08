@@ -1,7 +1,6 @@
 package com.artins.TextAnalizer.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.artins.TextAnalizer.model.WordHistogram;
 import com.artins.TextAnalizer.model.WordScore;
-import com.artins.TextAnalizer.utils.SortByWordScore;
 
 import lombok.Data;
 
@@ -54,9 +52,8 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 
 		}
 
-		// addFrequencies();
 		return getDistinctWord(wordHistogram);
-		//return wordHistogram;
+
 	}
 
 	@Data
@@ -80,7 +77,7 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 				int freq = 1;
 
 				for (int j = 0; j < wordScores.size(); j++) {
-					// List contains and frequency here?
+
 					if (wordScores.get(j).getWord().equals(mainWord)) {
 						freq++;
 						int theFrq = wordScores.get(j).getFrequency();
@@ -94,13 +91,10 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 				}
 			}
 
-
-
 			wordHistogram.append(wordScores);
-			
-			
-			if(id == 1) {
-				for(int i = 0; i  < wordScores.size(); i++) {
+
+			if (id == 1) {
+				for (int i = 0; i < wordScores.size(); i++) {
 					System.out.println(wordScores.get(i));
 				}
 			}
@@ -108,69 +102,43 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 	}
 
 	public WordHistogram getTop(int max, WordHistogram lst) {
+		List<WordScore> wordScoresFinalList = new ArrayList<>();
+		List<WordScore> currentList = lst.getHistogram();
 		WordHistogram result = new WordHistogram();
-		log.info("Here is the result size should be 0 {} ", result.getHistogram().size());
 
-		for (WordScore word : lst.getHistogram()) {
-			int freq = word.getFrequency();
-			WordScore topWord = word;
-
-			for (WordScore tmp : lst.getHistogram()) {
-				if (tmp.getFrequency() > freq) {
-					topWord = tmp;
+		for (WordScore wordScore : currentList) {
+			if (!wordScoresFinalList.contains(wordScore)) {
+				WordScore toReturn = wordScore;
+				for (int i = 0; i < currentList.size(); i++) {
+					if (toReturn.getFrequency() < currentList.get(i).getFrequency() && !currentList.contains(wordScore)) {
+						toReturn = currentList.get(i);
+					}
 				}
+					wordScoresFinalList.add(toReturn);
 			}
-			result.getHistogram().add(topWord);
 
 			max--;
 
-			if (max == 0) {
+			if (max == 0)
 				break;
-			}
-
 		}
 
-		Collections.sort(result.getHistogram(), new SortByWordScore());
-
-		log.info("Here is the result size should be hundred {} ", result.getHistogram().size());
-
+		result.setHistogram(wordScoresFinalList);
 		return result;
-	}
-
-	private void addFrequencies() {
-		log.info("Size before {} starts at {} ", wordHistogram.getHistogram().size());
-
-		for (int i = 0; i < wordHistogram.getHistogram().size() - 1; i++) {
-			WordScore wordScore = wordHistogram.getHistogram().get(i);
-			int wordFrequencies = wordScore.getFrequency();
-
-			for (int j = 0; j < wordHistogram.getHistogram().size(); j++) {
-				WordScore anotherWordScore = wordHistogram.getHistogram().get(j);
-
-				if (wordScore.getWord().equals(anotherWordScore.getWord())) {
-					// wordFrequencies += anotherWordScore.getFrequency();
-
-					wordHistogram.getHistogram().remove(j);
-				}
-			}
-			// wordHistogram.getHistogram().get(i).setFrequency(wordFrequencies);
-		}
-
-		log.info("Size after {}", wordHistogram.getHistogram().size());
 
 	}
-	
-	private WordHistogram getDistinctWord(WordHistogram list){
-		 List<WordScore> wordScores = new ArrayList<>();
-		 WordHistogram result = new WordHistogram();
-		
+
+	private WordHistogram getDistinctWord(WordHistogram list) {
+		List<WordScore> wordScores = new ArrayList<>();
+		WordHistogram result = new WordHistogram();
+
 		for (int i = 0; i < list.getHistogram().size(); i++) {
 			WordScore mainWord = list.getHistogram().get(i);
 
 			boolean exist = false;
 
 			for (int j = 0; j < wordScores.size(); j++) {
-				// List contains and frequency here?
+
 				if (wordScores.get(j).getWord().equals(mainWord.getWord())) {
 					int theFrq = wordScores.get(j).getFrequency() + mainWord.getFrequency();
 					WordScore tmpWord = WordScore.builder().word(mainWord.getWord()).frequency(theFrq).build();

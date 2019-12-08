@@ -33,7 +33,7 @@ public class TextAnalizerImpl implements TextAnalizer {
 			List<String> words = Arrays.asList(data.split(" "));
 			log.info("Size of word is {}", words.size());
 			
-			return buildResponseObj(service.getHistogram(words));
+			return buildResponseObj(service.getTop(100, service.getHistogram(words)));
 		} catch (MalformedURLException e) {
 			//TODO: How to respond to the controller
 				e.printStackTrace();
