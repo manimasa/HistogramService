@@ -24,22 +24,19 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 	public WordHistogram getHistogram(List<String> text) {
 		workerThreadsResource = text;
 		final int resourceSize = workerThreadsResource.size();
+		
 		log.info("Resource size is {}", resourceSize);
 
-		if (resourceSize < WORDS_PER_WORKER_THREAD) {
-			// TODO: use only one thread
-		} else {
-			final int nrOfWorkerThreads = resourceSize / WORDS_PER_WORKER_THREAD;
-			Thread[] workerThreads = new Thread[nrOfWorkerThreads];
-
-			for (int i = 0; i < nrOfWorkerThreads; i++) {
-				int toIndex = (i + 1) * (WORDS_PER_WORKER_THREAD - 1);
-				List<String> workerThreadResource = new ArrayList<String>(workerThreadsResource.subList(i, toIndex));
-				workerThreads[i] = new Thread(new WorkerThread(workerThreadResource, i));
-				workerThreads[i].start();
-			}
-
+		int nrOfWorkerThreads = 0;
+		
+		List<Thread> workerThreads = new ArrayList<>();
+		for (int i = 0; i < resourceSize; i += WORDS_PER_WORKER_THREAD) {
+			List<String> workerThreadResource = new ArrayList<String>(workerThreadsResource.subList(i, Math.min(resourceSize, i + WORDS_PER_WORKER_THREAD)));
+			workerThreads.add(new Thread(new WorkerThread(workerThreadResource, nrOfWorkerThreads)));
+			workerThreads.get(nrOfWorkerThreads).start();
+			nrOfWorkerThreads++;
 		}
+		
 
 		return wordHistogram;
 	}

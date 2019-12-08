@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class TextAnalizerRequest {
-    @ApiModelProperty(example = "https://www.amazon.com")
+    @ApiModelProperty(example = "https://www.aftonbladet.se/")
 	private String url;
 }

@@ -1,6 +1,5 @@
 package com.artins.TextAnalizer.api.controller;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
