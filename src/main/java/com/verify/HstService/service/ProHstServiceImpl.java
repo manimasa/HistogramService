@@ -23,6 +23,8 @@ public class ProHstServiceImpl implements ProHstService {
 
 	@Override
 	public Hist getHistogram(List<String> urlData) {
+		hst.getData().clear();
+		
 		workerThreadsResource = urlData;
 		final int totalLoad = workerThreadsResource.size();
 		
