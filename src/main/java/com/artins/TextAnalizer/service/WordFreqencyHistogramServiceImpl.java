@@ -1,6 +1,7 @@
 package com.artins.TextAnalizer.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.artins.TextAnalizer.model.WordHistogram;
 import com.artins.TextAnalizer.model.WordScore;
+import com.artins.TextAnalizer.utils.SortByWordScore;
 
 import lombok.Data;
 
@@ -17,6 +19,7 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 	private final int WORDS_PER_WORKER_THREAD = 1000;
 	private List<String> workerThreadsResource = new ArrayList<>();
 	private WordHistogram wordHistogram = new WordHistogram();
+	private final int MAX_WORD_LENGTH = 3;
 
 	private static final Logger log = LoggerFactory.getLogger(TextAnalizer.class);
 
@@ -24,20 +27,34 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 	public WordHistogram getHistogram(List<String> text) {
 		workerThreadsResource = text;
 		final int resourceSize = workerThreadsResource.size();
-		
-		log.info("Resource size is {}", resourceSize);
+		// Should be cleared
+		wordHistogram.getHistogram().clear();
+
+		log.info("Resource size is {} and length of workerThreadsResource is {}", resourceSize,
+				workerThreadsResource.size());
 
 		int nrOfWorkerThreads = 0;
-		
+
 		List<Thread> workerThreads = new ArrayList<>();
 		for (int i = 0; i < resourceSize; i += WORDS_PER_WORKER_THREAD) {
-			List<String> workerThreadResource = new ArrayList<String>(workerThreadsResource.subList(i, Math.min(resourceSize, i + WORDS_PER_WORKER_THREAD)));
+			List<String> workerThreadResource = new ArrayList<String>(
+					workerThreadsResource.subList(i, Math.min(resourceSize, i + WORDS_PER_WORKER_THREAD)));
 			workerThreads.add(new Thread(new WorkerThread(workerThreadResource, nrOfWorkerThreads)));
 			workerThreads.get(nrOfWorkerThreads).start();
 			nrOfWorkerThreads++;
 		}
-		
 
+		try {
+
+			for (Thread t : workerThreads) {
+				t.join();
+			}
+
+		} catch (InterruptedException e) {
+
+		}
+
+		// addFrequencies();
 		return wordHistogram;
 	}
 
@@ -57,24 +74,87 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 			log.info("WorkerThread {} starts at {} ", id, System.currentTimeMillis());
 
 			for (int i = 0; i < resource.size(); i++) {
-				String mainWord = resource.remove(i);
+				String mainWord = resource.get(i);
+
 				int freq = 1;
 
-				for (int k = 0; k < resource.size(); k++) {
-					String tmpWord = resource.get(k);
-					if (mainWord.equals(tmpWord)) {
-						resource.remove(k);
+				for (int j = 0; j < wordScores.size(); j++) {
+					// List contains and frequency here?
+					if (wordScores.get(j).getWord().equals(mainWord)) {
 						freq++;
+						int theFrq = wordScores.get(j).getFrequency();
+						WordScore tmpWord = WordScore.builder().word(mainWord).frequency(theFrq + freq).build();
+						wordScores.set(j, tmpWord);
 					}
 				}
 
-				wordScores.add(WordScore.builder().word(mainWord).frequency(freq).build());
+				if (freq == 1) {
+					wordScores.add(WordScore.builder().word(mainWord).frequency(freq).build());
+				}
 			}
+			
+			/*if(id == 0) {
+				for(int i = 0; i  < wordScores.size(); i++) {
+					System.out.println(wordScores.get(i));
+				}
+			}*/
 
-			log.info("WorkerThread {} ends at {} removed", id, System.currentTimeMillis());
 
 			wordHistogram.append(wordScores);
 		}
+	}
+
+	public WordHistogram getTop(int max, WordHistogram lst) {
+		WordHistogram result = new WordHistogram();
+		log.info("Here is the result size should be 0 {} ", result.getHistogram().size());
+
+		for (WordScore word : lst.getHistogram()) {
+			int freq = word.getFrequency();
+			WordScore topWord = word;
+
+			for (WordScore tmp : lst.getHistogram()) {
+				if (tmp.getFrequency() > freq) {
+					topWord = tmp;
+				}
+			}
+			result.getHistogram().add(topWord);
+
+			max--;
+
+			if (max == 0) {
+				break;
+			}
+
+		}
+
+		Collections.sort(result.getHistogram(), new SortByWordScore());
+
+		log.info("Here is the result size should be hundred {} ", result.getHistogram().size());
+
+		return result;
+	}
+
+	private void addFrequencies() {
+		log.info("Size before {} starts at {} ", wordHistogram.getHistogram().size());
+
+		for (int i = 0; i < wordHistogram.getHistogram().size() - 1; i++) {
+			WordScore wordScore = wordHistogram.getHistogram().get(i);
+			int wordFrequencies = wordScore.getFrequency();
+
+			for (int j = 0; j < wordHistogram.getHistogram().size(); j++) {
+				WordScore anotherWordScore = wordHistogram.getHistogram().get(j);
+
+				if (wordScore.getWord().equals(anotherWordScore.getWord())) {
+					// wordFrequencies += anotherWordScore.getFrequency();
+
+					wordHistogram.getHistogram().remove(j);
+				}
+			}
+			// wordHistogram.getHistogram().get(i).setFrequency(wordFrequencies);
+		}
+
+		log.info("Size after {}", wordHistogram.getHistogram().size());
+
 	}
 
 }

@@ -25,14 +25,15 @@ public class TextAnalizerImpl implements TextAnalizer {
 	
 	@Override
 	public List<TextAnalizerResponse> getScore(String url) {
-		final String html;
+		
 		try {
-			html = Jsoup.connect(url).get().html();
+			final String html = Jsoup.connect(url).get().html();
 			Document doc = Jsoup.parse(html);
 			String data =(doc.body().text());
 			List<String> words = Arrays.asList(data.split(" "));
 			log.info("Size of word is {}", words.size());
-			return buildResponseObj(service.getHistogram(words));
+			
+			return buildResponseObj(service.getTop(100,service.getHistogram(words)));
 		} catch (MalformedURLException e) {
 			//TODO: How to respond to the controller
 				e.printStackTrace();

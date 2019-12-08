@@ -9,4 +9,6 @@ import com.artins.TextAnalizer.model.WordHistogram;
 @Service
 public interface WordFreqencyHistogramService {
 	WordHistogram getHistogram(List<String>  text);
+	WordHistogram getTop(int max, WordHistogram  list);
+
 }
