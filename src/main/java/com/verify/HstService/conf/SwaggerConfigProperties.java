@@ -1,4 +1,4 @@
-package com.artins.TextAnalizer.conf;
+package com.verify.HstService.conf;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

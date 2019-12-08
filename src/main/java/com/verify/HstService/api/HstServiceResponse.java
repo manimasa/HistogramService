@@ -1,11 +1,11 @@
-package com.artins.TextAnalizer.api;
+package com.verify.HstService.api;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class TextAnalizerResponse {
+public class HstServiceResponse {
 	private String word;
 	private int frequency;
 }

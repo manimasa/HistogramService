@@ -1,4 +1,4 @@
-package com.artins.TextAnalizer.conf;
+package com.verify.HstService.conf;
 
 import java.time.LocalDate;
 

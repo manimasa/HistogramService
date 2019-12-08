@@ -1,18 +1,17 @@
-package com.artins.TextAnalizer.api.controller;
+package com.verify.HstService.api.controller;
 
 import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.artins.TextAnalizer.api.TextAnalizerRequest;
-import com.artins.TextAnalizer.api.TextAnalizerResponse;
+import com.verify.HstService.api.HstServiceRequest;
+import com.verify.HstService.api.HstServiceResponse;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,13 +19,13 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping("v1/texts-scores/")
-@Api(tags = "TextAnalizer API")
-public interface TextAnalizerResourceApi {
+@RequestMapping("v1/scores/")
+@Api(tags = "HistService API")
+public interface HstServiceResourceApi {
 	
 	@ApiOperation(value = "Return scores for texts on url")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "ok"), 
 							@ApiResponse(code = 204, message = "No content")})
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public List<TextAnalizerResponse> scoreUrlTexts(@Valid @RequestBody TextAnalizerRequest req);
+	public  ResponseEntity<List<HstServiceResponse>> scoreUrlTexts(@Valid @RequestBody HstServiceRequest req);
 }

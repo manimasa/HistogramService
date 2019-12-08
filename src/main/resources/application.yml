@@ -6,7 +6,7 @@ server:
 ---
 spring:
   application:
-    name: TextAnalizerService
+    name: HstService
   profiles: local, default
      
 datasource:
@@ -41,8 +41,8 @@ api:
       
 swagger:
   enabled: true
-  title: TextAnalizerService API
-  description: Sample Swagger implementation for the `TextAnalizerService` service, leveraging annotations at the controller-method level.
+  title: HstService API
+  description: Sample Swagger implementation for the `HstService` service, leveraging annotations at the controller-method level.
   useDefaultResponseMessages: false
   enableUrlTemplating: false
   deepLinking: true

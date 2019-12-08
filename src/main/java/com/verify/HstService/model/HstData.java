@@ -1,4 +1,4 @@
-package com.artins.TextAnalizer.model;
+package com.verify.HstService.model;
 
 import java.util.Objects;
 
@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class WordScore {
+public class HstData {
 	String word;
 	int frequency;
 	
@@ -18,7 +18,7 @@ public class WordScore {
 	        return false;
 	    if (getClass() != o.getClass())
 	        return false;
-	    WordScore wordScore = (WordScore) o;
+	    HstData wordScore = (HstData) o;
 	    return Objects.equals(word, wordScore.word);
 	}
 }
