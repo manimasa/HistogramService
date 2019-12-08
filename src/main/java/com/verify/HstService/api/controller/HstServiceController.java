@@ -20,7 +20,7 @@ public class HstServiceController implements HstServiceResourceApi {
 
 	@Override
 	public ResponseEntity<List<HstServiceResponse>> scoreUrlTexts(@Valid HstServiceRequest req) {
-		List<HstServiceResponse> result = service.getScore(req.getUrl());
+		List<HstServiceResponse> result = service.getHst(req.getUrl());
 
 		if (result != null) {
 			return new ResponseEntity<List<HstServiceResponse>>(result, HttpStatus.OK);

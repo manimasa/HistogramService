@@ -9,5 +9,5 @@ import com.verify.HstService.api.HstServiceResponse;
 
 @Service
 public interface HstService {
-	List<HstServiceResponse>  getScore(String url);
+	List<HstServiceResponse>  getHst(String url);
 }

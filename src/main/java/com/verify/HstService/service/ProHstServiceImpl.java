@@ -13,7 +13,7 @@ import com.verify.HstService.model.HstData;
 import lombok.Data;
 
 @Service
-public class ProcessHstServiceImpl implements ProcessHstService {
+public class ProHstServiceImpl implements ProHstService {
 	private final int LOAD_PER_WORKER_THREAD = 800;
 	private List<String> workerThreadsResource = new ArrayList<>();
 	private Hist hst = new Hist();
@@ -26,8 +26,8 @@ public class ProcessHstServiceImpl implements ProcessHstService {
 		workerThreadsResource = urlData;
 		final int totalLoad = workerThreadsResource.size();
 		
-		hst.getData().clear(); //should be cleared?
 		int threadNr = 0;
+		
 		List<Thread> workerThreads = new ArrayList<>();
 		
 		for (int i = 0; i < totalLoad; i += LOAD_PER_WORKER_THREAD) {
@@ -52,7 +52,9 @@ public class ProcessHstServiceImpl implements ProcessHstService {
 
 	public Hist getTopHistogramData(int max, Hist hst) {
 		List<HstData> dynHst = new ArrayList<>();
-		List<HstData> finalHst = hst.getData();
+		final List<HstData> finalHst = hst.getData();
+		final int total = max;
+		
 		Hist resultHst = new Hist();
 
 		for (HstData data : finalHst) {
@@ -72,7 +74,7 @@ public class ProcessHstServiceImpl implements ProcessHstService {
 		}
 
 		resultHst.setData(dynHst);
-		log.info("Succefully compiled list of {} top words.", max);
+		log.info("Succefully compiled histogram of {} most frequent words.", total);
 		return resultHst;
 	}
 	
@@ -112,8 +114,8 @@ public class ProcessHstServiceImpl implements ProcessHstService {
 				}
 			}
 			
-			long taskTime = (startTime - System.currentTimeMillis())/ 1000;
-			log.info("WorkerThread {} completed in {}sec ", id, taskTime);
+			long taskTime = (startTime - System.currentTimeMillis());
+			log.info("WorkerThread {} completed in {}ms ", id, taskTime);
 			hst.append(hstData);
 		}
 	}
@@ -143,7 +145,7 @@ public class ProcessHstServiceImpl implements ProcessHstService {
 		}
 
 		resultHst.setData(dynHst);
-		log.info("Succefully compiled list of distinct words.");
+		log.info("Succefully compiled distinct words.");
 		return resultHst;
 	}
 

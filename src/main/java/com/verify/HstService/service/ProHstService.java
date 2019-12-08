@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.verify.HstService.model.Hist;
 
 @Service
-public interface ProcessHstService {
+public interface ProHstService {
 	Hist getHistogram(List<String>  urlData);
 	Hist getTopHistogramData(int max, Hist  histData);
 

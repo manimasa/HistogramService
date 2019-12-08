@@ -15,26 +15,28 @@ import org.springframework.stereotype.Service;
 
 import com.verify.HstService.api.HstServiceResponse;
 import com.verify.HstService.model.Hist;
+import com.verify.HstService.model.HstData;
 
 @Service
 public class HstServiceImpl implements HstService {
 	private static final Logger log = LoggerFactory.getLogger(HstService.class);
-	
+	private final int MAX_HST_DATA = 100;
 	@Autowired
-	private ProcessHstService service;
+	private ProHstService service;
+	
 	
 	@Override
-	public List<HstServiceResponse> getScore(String url) {
+	public List<HstServiceResponse> getHst(String url) {
 		
 		try {
 			final String html = Jsoup.connect(url).get().html();
 			Document doc = Jsoup.parse(html);
 			String data =(doc.body().text());
-			List<String> words = Arrays.asList(data.split(" "));
+			List<String> urlData = Arrays.asList(data.split(" "));
 			
-			log.info("Got {} words from URL", words.size());
+			log.info("Got {} words in total from URL {}", urlData.size(), url);
 			
-			return buildHistResponse(service.getTopHistogramData(100, service.getHistogram(words)));
+			return buildHistResponse(service.getTopHistogramData(MAX_HST_DATA, service.getHistogram(urlData)));
 		} catch (MalformedURLException e) {
 			log.error("An exception occured requesting url data", e);
 		} catch (IOException e) {
@@ -44,14 +46,17 @@ public class HstServiceImpl implements HstService {
 		return null;
 	}
 	
-	private List<HstServiceResponse> buildHistResponse(Hist hist){
-		final List<HstServiceResponse> list = new ArrayList<>();
-		
-		for(int i = 0; i < hist.getData().size(); i++) {
-			list.add(HstServiceResponse.builder().frequency(hist.getData().get(i).getFrequency()).word(hist.getData().get(i).getWord()).build());
+	private List<HstServiceResponse> buildHistResponse(Hist hst){
+		final List<HstServiceResponse> hstRespLst = new ArrayList<>();
+
+		for(HstData hstDat : hst.getData()) {
+			hstRespLst.add(HstServiceResponse
+					.builder()
+					.frequency(hstDat.getFrequency())
+					.word(hstDat.getWord()).build());
 		}
 		
-		return list;
+		return hstRespLst;
 	}
 
 }
