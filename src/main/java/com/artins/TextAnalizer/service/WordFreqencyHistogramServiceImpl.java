@@ -34,7 +34,7 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 
 			for (int i = 0; i < nrOfWorkerThreads; i++) {
 				int toIndex = (i + 1) * (WORDS_PER_WORKER_THREAD - 1);
-				List<String> workerThreadResource = workerThreadsResource.subList(i, toIndex);
+				List<String> workerThreadResource = new ArrayList<String>(workerThreadsResource.subList(i, toIndex));
 				workerThreads[i] = new Thread(new WorkerThread(workerThreadResource, i));
 				workerThreads[i].start();
 			}
@@ -60,13 +60,13 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 			log.info("WorkerThread {} starts at {} ", id, System.currentTimeMillis());
 
 			for (int i = 0; i < resource.size(); i++) {
-				String mainWord = resource.get(i);
+				String mainWord = resource.remove(i);
 				int freq = 1;
 
 				for (int k = 0; k < resource.size(); k++) {
 					String tmpWord = resource.get(k);
 					if (mainWord.equals(tmpWord)) {
-						resource.get(k);
+						resource.remove(k);
 						freq++;
 					}
 				}
@@ -74,7 +74,7 @@ public class WordFreqencyHistogramServiceImpl implements WordFreqencyHistogramSe
 				wordScores.add(WordScore.builder().word(mainWord).frequency(freq).build());
 			}
 
-			log.info("WorkerThread {} ends at {} ", id, System.currentTimeMillis());
+			log.info("WorkerThread {} ends at {} removed", id, System.currentTimeMillis());
 
 			wordHistogram.append(wordScores);
 		}
