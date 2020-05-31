@@ -13,7 +13,7 @@ import lombok.Data;
 
 @Service
 public class HistogramFactoryImpl implements HistogramFactory {
-	private final int LOAD_PER_WORKER_THREAD = 800;
+	private final int LOAD_PER_THREAD = 800;
 	private List<String> threadsResource = new ArrayList<>();
 	private Histogram histogram = new Histogram();
 	private final int MAX_WORD_LENGTH = 3;
@@ -31,10 +31,10 @@ public class HistogramFactoryImpl implements HistogramFactory {
 
 		List<java.lang.Thread> threads = new ArrayList<>();
 
-		for (int i = 0; i < totalLoad; i += LOAD_PER_WORKER_THREAD) {
+		for (int i = 0; i < totalLoad; i += LOAD_PER_THREAD) {
 			//Create as many evenly distributed thread resource for the workerThreads
 			List<String> threadLoad =
-					new ArrayList<>(threadsResource.subList(i, Math.min(totalLoad, i + LOAD_PER_WORKER_THREAD)));
+					new ArrayList<>(threadsResource.subList(i, Math.min(totalLoad, i + LOAD_PER_THREAD)));
 
 			threads.add(new java.lang.Thread(new Thread(threadLoad, threadNum)));
 			threads.get(threadNum).start();
