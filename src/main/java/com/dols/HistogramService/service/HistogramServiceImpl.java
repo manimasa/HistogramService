@@ -44,17 +44,17 @@ public class HistogramServiceImpl implements HistogramService {
 		return null;
 	}
 
-	private List<HistogramServiceResponse> buildHistogramResponse(Histogram hst){
-		final List<HistogramServiceResponse> hstRespLst = new ArrayList<>();
+	private List<HistogramServiceResponse> buildHistogramResponse(Histogram histogram){
+		final List<HistogramServiceResponse> histogramResponseList = new ArrayList<>();
 
-		for(HistogramData hstDat : hst.getData()) {
-			hstRespLst.add(HistogramServiceResponse
+		for(HistogramData histogramData : histogram.getData()) {
+			histogramResponseList.add(HistogramServiceResponse
 					.builder()
-					.frequency(hstDat.getFrequency())
-					.word(hstDat.getWord()).build());
+					.frequency(histogramData.getFrequency())
+					.word(histogramData.getWord()).build());
 		}
 
-		return hstRespLst;
+		return histogramResponseList;
 	}
 
 }
