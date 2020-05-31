@@ -32,7 +32,7 @@ public class HistogramFactoryImpl implements HistogramFactory {
 		List<java.lang.Thread> threads = new ArrayList<>();
 
 		for (int i = 0; i < totalLoad; i += LOAD_PER_THREAD) {
-			//Create as many evenly distributed thread resource for the workerThreads
+			//Create as many evenly distributed thread resource for the threads
 			List<String> threadLoad =
 					new ArrayList<>(threadsResource.subList(i, Math.min(totalLoad, i + LOAD_PER_THREAD)));
 
@@ -46,29 +46,29 @@ public class HistogramFactoryImpl implements HistogramFactory {
 				t.join();
 			}
 		} catch (InterruptedException e) {
-			log.error("An exception occurred when waiting for threads", e);
+			log.error("An exception occurred while waiting for threads", e);
 		}
 		return getDistinctWordsFrom(histogram);
 	}
 
-	public Histogram buildAndGetMaxWordLengthFromHistogram(int max, Histogram hst) {
-		 int maxCounter = Math.min(hst.getData().size(), max);
+	public Histogram buildAndGetMaxWordLengthFromHistogram(int max, Histogram histogram) {
+		 int maxCounter = Math.min(histogram.getData().size(), max);
 
 		List<HistogramData> dynamicHistogramList = new ArrayList<>();
-		final List<HistogramData> finalHistogramList = hst.getData();
+		final List<HistogramData> finalHistogramList = histogram.getData();
 		Histogram resultHistogram = new Histogram();
 
-		for (HistogramData data : finalHistogramList) {
-			if (!dynamicHistogramList.contains(data)) {
-				HistogramData toReturn = data;
-				for (int i = 0; i < finalHistogramList.size(); i++) {
-					if (toReturn.getFrequency() < finalHistogramList.get(i).getFrequency()
-							&& !finalHistogramList.contains(data)) {
-						toReturn = finalHistogramList.get(i);
+		for (HistogramData histogramDataToCompareWith : finalHistogramList) {
+			if (!dynamicHistogramList.contains(histogramDataToCompareWith)) {
+				HistogramData finalHistogramData = histogramDataToCompareWith;
+				for (int index = 0; index < finalHistogramList.size(); index++) {
+					if (finalHistogramData.getFrequency() < finalHistogramList.get(index).getFrequency()
+							&& !finalHistogramList.contains(histogramDataToCompareWith)) {
+						finalHistogramData = finalHistogramList.get(index);
 					}
 				}
 
-				dynamicHistogramList.add(toReturn);
+				dynamicHistogramList.add(finalHistogramData);
 			}
 			maxCounter--;
 			if (maxCounter == 0) {break;}
@@ -82,7 +82,7 @@ public class HistogramFactoryImpl implements HistogramFactory {
 	@Data
 	private class Thread implements Runnable {
 		private List<String> load;
-		private List<HistogramData> histogramData = new ArrayList<>();
+		private List<HistogramData> histogramDataList = new ArrayList<>();
 		private int id;
 
 		Thread(List<String> load, int id) {
@@ -98,54 +98,56 @@ public class HistogramFactoryImpl implements HistogramFactory {
 			for (String mainWord : load) {
 				int freq = 1;
 
-				for (int j = 0; j < histogramData.size(); j++) {
+				for (int currentIndex = 0; currentIndex < histogramDataList.size(); currentIndex++) {
 
-					if (histogramData.get(j).getWord().equals(mainWord)) {
+					if (histogramDataList.get(currentIndex).getWord().equals(mainWord)) {
 						freq++;
-						int theFrq = histogramData.get(j).getFrequency();
-						HistogramData tmpWord = HistogramData.builder().word(mainWord).frequency(theFrq + freq).build();
-						histogramData.set(j, tmpWord);
+						int histogramDataFrq = histogramDataList.get(currentIndex).getFrequency();
+						HistogramData updatedHistogramData = HistogramData.builder().word(mainWord).frequency(histogramDataFrq + freq).build();
+						histogramDataList.set(currentIndex, updatedHistogramData);
 					}
 				}
 
 				if (freq == 1 && mainWord.length() >= MAX_WORD_LENGTH) {
-					histogramData.add(HistogramData.builder().word(mainWord).frequency(freq).build());
+					histogramDataList.add(HistogramData.builder().word(mainWord).frequency(freq).build());
 				}
 			}
 
 			long taskTime = (System.currentTimeMillis() - startTime);
 			log.info("Thread {} completed in {} ms ", id, taskTime);
-			histogram.append(histogramData);
+			histogram.append(histogramDataList);
 		}
 	}
 
-	private Histogram getDistinctWordsFrom(Histogram hst) {
+	private Histogram getDistinctWordsFrom(Histogram histogram) {
 		List<HistogramData> dynamicHistogramList = new ArrayList<>();
-		Histogram resultHistogram = new Histogram();
+		Histogram compiledHistogramList = new Histogram();
 
-		for (int i = 0; i < hst.getData().size(); i++) {
-			HistogramData mainWord = hst.getData().get(i);
+		for (int i = 0; i < histogram.getData().size(); i++) {
+			HistogramData currentHistogramData = histogram.getData().get(i);
 
-			boolean exist = false;
+			boolean histogramDataExists = false;
 
-			for (int j = 0; j < dynamicHistogramList.size(); j++) {
+			for (int currentIndex = 0; currentIndex < dynamicHistogramList.size(); currentIndex++) {
 
-				if (dynamicHistogramList.get(j).getWord().equals(mainWord.getWord())) {
-					int theFrq = dynamicHistogramList.get(j).getFrequency() + mainWord.getFrequency();
-					HistogramData tmpWord = HistogramData.builder().word(mainWord.getWord()).frequency(theFrq).build();
-					dynamicHistogramList.set(j, tmpWord);
-					exist = true;
+				if (dynamicHistogramList.get(currentIndex).getWord().equals(currentHistogramData.getWord())) {
+					int histogramDataFreq = dynamicHistogramList.get(currentIndex).getFrequency() + currentHistogramData.getFrequency();
+					HistogramData updatedHistogramData = HistogramData.builder().word(currentHistogramData.getWord()).frequency(histogramDataFreq).build();
+					dynamicHistogramList.set(currentIndex, updatedHistogramData);
+					histogramDataExists = true;
 				}
 			}
 
-			if (!exist) {
-				dynamicHistogramList.add(mainWord);
+			if (!histogramDataExists) {
+				dynamicHistogramList.add(currentHistogramData);
 			}
 		}
 
-		resultHistogram.setData(dynamicHistogramList);
+		compiledHistogramList.setData(dynamicHistogramList);
+
 		log.info("Successfully compiled distinct words.");
-		return resultHistogram;
+
+		return compiledHistogramList;
 	}
 
 }
