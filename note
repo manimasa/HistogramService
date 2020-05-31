@@ -1,8 +1,0 @@
-If you have problem with eclipse not finding a dependency make sure that the project that you are working on is a maven project in eclipse
-If lombok is not working in eclipse make sure you have a correct jdk version set
-If you have problem with please login page of spring boot change your SpringBootApplicatioin(scanBasePackages value to your root package)
-Note that the eureka server will be connected to by the client with the defaultZone url from port:8080
-Note that the api in the YAML is for the swagger
-Note to access the client from eureka server i.e api gateway use this url http://localhost:8080/resource/swagger-ui.html#/ (This is because swagger is enabled on the client)
-The client is on http://localhost:8089/swagger-ui.html#/
-The eureka client is set to false by default in the application yaml file to enable it set the enabled property to true - same configuration can be applied to swagger.
