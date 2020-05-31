@@ -5,20 +5,18 @@ import java.util.List;
 
 import com.dols.HistogramService.model.Histogram;
 import com.dols.HistogramService.model.HistogramData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import lombok.Data;
 
 @Service
+@Slf4j
 public class HistogramFactoryImpl implements HistogramFactory {
 	private final int LOAD_PER_THREAD = 800;
 	private List<String> threadsResource = new ArrayList<>();
 	private Histogram histogram = new Histogram();
 	private final int MAX_WORD_LENGTH = 3;
-
-	private static final Logger log = LoggerFactory.getLogger(HistogramService.class);
 
 	@Override
 	public Histogram buildAndGetHistogramForUrlData(List<String> urlData) {
