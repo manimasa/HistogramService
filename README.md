@@ -1,5 +1,5 @@
 # HstService
-The service is for analyzing texts on a web page and return their frequencies. It returns to the client top 100 words with lenght over 3.
+The service is for analyzing texts on a web page and return their frequencies. It returns to the client top 100 words with length above 3.
 
 
  * mvn install
