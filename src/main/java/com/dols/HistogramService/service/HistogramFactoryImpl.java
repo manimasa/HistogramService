@@ -90,7 +90,7 @@ public class HistogramFactoryImpl implements HistogramFactory {
 
 		@Override
 		public void run() {
-			log.info("Thread {} is running", id);
+			log.info("Thread: {} is running", id);
 			long startTime = System.currentTimeMillis();
 
 			for (String mainWord : load) {

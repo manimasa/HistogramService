@@ -34,7 +34,7 @@ public class HistogramServiceImpl implements HistogramService {
 			String data =(doc.body().text());
 			List<String> urlData = Arrays.asList(data.split(" "));
 
-			log.info("I got {} words in total from the URL {}", urlData.size(), url);
+			log.info("Got {} words in total from the URL {}", urlData.size(), url);
 
 			return buildHistogramResponse(factory.buildAndGetMaxWordLengthFromHistogram(MAX_HST_DATA, factory.buildAndGetHistogramForUrlData(urlData)));
 		} catch (IOException e) {
