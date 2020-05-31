@@ -13,7 +13,7 @@ import lombok.Data;
 @Service
 @Slf4j
 public class HistogramFactoryImpl implements HistogramFactory {
-	private final int LOAD_PER_THREAD = 800;
+	private final int LOAD_PER_THREAD = 3000;
 	private List<String> threadsResource = new ArrayList<>();
 	private Histogram histogram = new Histogram();
 	private final int MAX_WORD_LENGTH = 3;
