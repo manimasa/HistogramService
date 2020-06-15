@@ -6,6 +6,6 @@ import com.dols.HistogramService.model.Histogram;
 
 public interface HistogramFactory {
 	Histogram buildAndGetHistogramForUrlData(List<String>  urlData);
-	Histogram buildAndGetMaxWordLengthFromHistogram(int max, Histogram histogramData);
+	Histogram buildHistogramMaxOf(int max, Histogram histogramData);
 
 }

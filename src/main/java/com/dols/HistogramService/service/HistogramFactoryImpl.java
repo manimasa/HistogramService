@@ -49,7 +49,7 @@ public class HistogramFactoryImpl implements HistogramFactory {
 		return getDistinctWordsFrom(histogram);
 	}
 
-	public Histogram buildAndGetMaxWordLengthFromHistogram(int max, Histogram histogram) {
+	public Histogram buildHistogramMaxOf(int max, Histogram histogram) {
 		 int maxCounter = Math.min(histogram.getData().size(), max);
 
 		List<HistogramData> dynamicHistogramList = new ArrayList<>();
